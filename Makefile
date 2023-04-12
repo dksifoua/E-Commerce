@@ -1,8 +1,15 @@
-CATALOG_SERVICE_DIR := ./catalog-service
+MAKE := $(shell which make)
 
-GRADLE := $(shell which gradle)
+clean:
+	@if [ ! -d "./$(service)" ]; then \
+  		echo "The service $(service) doesn't exist"; \
+  		exit 1; \
+	fi
+	@$(MAKE) -C ./$(service) clean
 
-.ONESHELL:
-run:
-	cd $(CATALOG_SERVICE_DIR)
-	$(GRADLE) bootRun
+test:
+	@if [ ! -d "./$(service)" ]; then \
+  		echo "The service $(service) doesn't exist"; \
+  		exit 1; \
+	fi
+	@$(MAKE) -C ./$(service) test
