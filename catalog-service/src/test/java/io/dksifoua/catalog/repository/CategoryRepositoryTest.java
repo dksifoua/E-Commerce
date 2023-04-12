@@ -23,16 +23,8 @@ public class CategoryRepositoryTest {
 
     @BeforeEach
     public void setup() {
-        category01 = Category
-                .builder()
-                .name("Category01")
-                .description("Description01")
-                .build();
-        category02 = Category
-                .builder()
-                .name("Category02")
-                .description("Description02")
-                .build();
+        category01 = Category.builder().name("Category01").description("Description01").build();
+        category02 = Category.builder().name("Category02").description("Description02").build();
     }
 
     @Test
@@ -49,11 +41,11 @@ public class CategoryRepositoryTest {
     }
 
     @Test
-    @DisplayName(value = "Get a category (id) unit test")
-    public void getCategoryByIdTest() {
+    @DisplayName(value = "Get a category (name) unit test")
+    public void getCategoryByNameTest() {
         Category savedCategory = categoryRepository.save(this.category01);
 
-        Optional<Category> category = categoryRepository.findById(savedCategory.getId());
+        Optional<Category> category = categoryRepository.findByName(savedCategory.getName());
 
         assertThat(category).isNotEmpty();
         assertThat(category.get().getName()).isEqualTo(this.category01.getName());
