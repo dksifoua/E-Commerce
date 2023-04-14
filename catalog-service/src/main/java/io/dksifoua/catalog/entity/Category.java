@@ -3,9 +3,6 @@ package io.dksifoua.catalog.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-/**
- * @author Dimitri Sifoua
- */
 @Getter
 @Setter
 @Builder

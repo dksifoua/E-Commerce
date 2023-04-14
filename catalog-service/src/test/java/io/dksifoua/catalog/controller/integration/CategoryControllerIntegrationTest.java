@@ -1,40 +1,39 @@
-package io.dksifoua.catalog.controller;
+package io.dksifoua.catalog.controller.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.dksifoua.catalog.AbstractContainerBaseTest;
 import io.dksifoua.catalog.entity.Category;
-import io.dksifoua.catalog.service.ICategoryService;
+import io.dksifoua.catalog.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
-public class CategoryControllerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private CategoryRepository categoryRepository;
 
-    @MockBean
-    private ICategoryService categoryService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private Category category01;
     private Category category02;
@@ -42,18 +41,21 @@ public class CategoryControllerTest {
 
     @BeforeEach
     public void setUp() {
-        this.category01 = Category.builder().id(1L).name("Category01").description("Description01").build();
-        this.category02 = Category.builder().id(2L).name("Category02").description("Description02").build();
+        this.categoryRepository.deleteAll();
+        this.category01 = Category.builder().name("Category01").description("Description01").build();
+        this.category02 = Category.builder().name("Category02").description("Description02").build();
         this.categories = List.of(this.category01, category02);
     }
 
     @Test
-    @DisplayName(value = "Create a category")
-    public void createdCategoryTest() throws Exception {
-        given(this.categoryService.saveCategory(any(Category.class))).willAnswer(
-                invocation -> invocation.getArgument(0)
-        );
+    @DisplayName(value = "Database container is running")
+    public void databaseContainerIsRunningTest() {
+        assertThat(MY_SQL_CONTAINER.isRunning()).isTrue();
+    }
 
+    @Test
+    @DisplayName(value = "Create a category")
+    public void createdCategoryIntegrationTest() throws Exception {
         this.mockMvc
                 .perform(
                         post("/api/v1/categories")
@@ -68,9 +70,8 @@ public class CategoryControllerTest {
 
     @Test
     @DisplayName(value = "Get all categories")
-    public void getAllCategoriesTest() throws Exception {
-        given(this.categoryService.getAllCategories()).willReturn(this.categories);
-
+    public void getAllCategoriesIntegrationTest() throws Exception {
+        this.categoryRepository.saveAll(this.categories);
         this.mockMvc
                 .perform(get("/api/v1/categories"))
                 .andDo(print())
@@ -80,8 +81,8 @@ public class CategoryControllerTest {
 
     @Test
     @DisplayName(value = "Get a category by id")
-    public void getCategoryByIdTest() throws Exception {
-        given(this.categoryService.getCategoryById(any(Long.class))).willReturn(Optional.of(this.category01));
+    public void getCategoryByIdIntegrationTest() throws Exception {
+        this.categoryRepository.save(this.category01);
         this.mockMvc
                 .perform(get("/api/v1/categories/{id}", this.category01.getId()))
                 .andDo(print())
@@ -92,9 +93,7 @@ public class CategoryControllerTest {
 
     @Test
     @DisplayName(value = "Get a category by id that doesn't exist")
-    public void getCategoryByIdWithResourceNotFoundExceptionTest() throws Exception {
-        given(this.categoryService.getCategoryById(any(Long.class))).willReturn(Optional.empty());
-
+    public void getCategoryByIdWithResourceNotFoundExceptionIntegrationTest() throws Exception {
         this.mockMvc
                 .perform(get("/api/v1/categories/{id}", this.categories.size() + 1))
                 .andDo(print())
@@ -103,12 +102,8 @@ public class CategoryControllerTest {
 
     @Test
     @DisplayName(value = "Update a category by id")
-    public void updateCategoryByIdTest() throws Exception {
-        given(this.categoryService.getCategoryById(this.category01.getId())).willReturn(Optional.of(this.category01));
-        given(this.categoryService.saveCategory(any(Category.class))).willAnswer(
-                invocation -> invocation.getArgument(0)
-        );
-
+    public void updateCategoryByIdIntegrationTest() throws Exception {
+        this.categoryRepository.save(this.category01);
         this.mockMvc
                 .perform(
                         put("/api/v1/categories/{id}", this.category01.getId())
@@ -123,9 +118,7 @@ public class CategoryControllerTest {
 
     @Test
     @DisplayName(value = "Update a category by id that doesn't exist")
-    public void updateCategoryByIdWithResourceNotFoundExceptionTest() throws Exception {
-        given(this.categoryService.getCategoryById(any(Long.class))).willReturn(Optional.empty());
-
+    public void updateCategoryByIdWithResourceNotFoundExceptionIntegrationTest() throws Exception {
         this.mockMvc
                 .perform(
                         put("/api/v1/categories/{id}", this.category01.getId())
@@ -138,9 +131,8 @@ public class CategoryControllerTest {
 
     @Test
     @DisplayName(value = "Delete a category by id")
-    public void deleteCategoryByIdTest() throws Exception {
-        willDoNothing().given(this.categoryService).deleteCategoryById(any(Long.class));
-
+    public void deleteCategoryByIdIntegrationTest() throws Exception {
+        this.categoryRepository.save(this.category01);
         this.mockMvc
                 .perform(delete("/api/v1/categories/{id}", this.category01.getId())                )
                 .andDo(print())
