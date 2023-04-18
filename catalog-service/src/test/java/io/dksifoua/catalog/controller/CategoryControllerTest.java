@@ -56,7 +56,7 @@ public class CategoryControllerTest {
 
         this.mockMvc
                 .perform(
-                        post("/api/v1/categories")
+                        post("/api/v1/catalog/categories")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(this.category01))
                 )
@@ -72,7 +72,7 @@ public class CategoryControllerTest {
         given(this.categoryService.getAllCategories()).willReturn(this.categories);
 
         this.mockMvc
-                .perform(get("/api/v1/categories"))
+                .perform(get("/api/v1/catalog/categories"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(this.categories.size())));
@@ -83,7 +83,7 @@ public class CategoryControllerTest {
     public void getCategoryByIdTest() throws Exception {
         given(this.categoryService.getCategoryById(any(Long.class))).willReturn(Optional.of(this.category01));
         this.mockMvc
-                .perform(get("/api/v1/categories/{id}", this.category01.getId()))
+                .perform(get("/api/v1/catalog/categories/{id}", this.category01.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(this.category01.getName())))
@@ -96,7 +96,7 @@ public class CategoryControllerTest {
         given(this.categoryService.getCategoryById(any(Long.class))).willReturn(Optional.empty());
 
         this.mockMvc
-                .perform(get("/api/v1/categories/{id}", this.categories.size() + 1))
+                .perform(get("/api/v1/catalog/categories/{id}", this.categories.size() + 1))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -111,7 +111,7 @@ public class CategoryControllerTest {
 
         this.mockMvc
                 .perform(
-                        put("/api/v1/categories/{id}", this.category01.getId())
+                        put("/api/v1/catalog/categories/{id}", this.category01.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(this.category02))
                 )
@@ -128,7 +128,7 @@ public class CategoryControllerTest {
 
         this.mockMvc
                 .perform(
-                        put("/api/v1/categories/{id}", this.category01.getId())
+                        put("/api/v1/catalog/categories/{id}", this.category01.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(this.category02))
                 )
@@ -142,7 +142,7 @@ public class CategoryControllerTest {
         willDoNothing().given(this.categoryService).deleteCategoryById(any(Long.class));
 
         this.mockMvc
-                .perform(delete("/api/v1/categories/{id}", this.category01.getId())                )
+                .perform(delete("/api/v1/catalog/categories/{id}", this.category01.getId())                )
                 .andDo(print())
                 .andExpect(status().isOk());
     }

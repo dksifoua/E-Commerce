@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface ICategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c where c.name = :name")
     Optional<Category> findByName(String name);
 }

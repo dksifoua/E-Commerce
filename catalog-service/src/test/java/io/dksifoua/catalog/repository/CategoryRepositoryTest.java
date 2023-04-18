@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CategoryRepositoryTest {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private ICategoryRepository categoryRepository;
 
     private Category category01;
     private Category category02;
@@ -30,10 +30,10 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName(value = "Get all categories unit test")
     public  void getAllCategoryTest() {
-        categoryRepository.save(this.category01);
-        categoryRepository.save(this.category02);
+        this.categoryRepository.save(this.category01);
+        this.categoryRepository.save(this.category02);
 
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = this.categoryRepository.findAll();
 
         assertThat(categories).isNotNull();
         assertThat(categories).isNotEmpty();
@@ -43,9 +43,9 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName(value = "Get a category (name) unit test")
     public void getCategoryByNameTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = this.categoryRepository.save(this.category01);
 
-        Optional<Category> category = categoryRepository.findByName(savedCategory.getName());
+        Optional<Category> category = this.categoryRepository.findByName(savedCategory.getName());
 
         assertThat(category).isNotEmpty();
         assertThat(category.get().getName()).isEqualTo(this.category01.getName());
@@ -55,7 +55,7 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName(value = "Save a category unit test")
     public void saveCategoryTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = this.categoryRepository.save(this.category01);
 
         assertThat(savedCategory).isNotNull();
         assertThat(savedCategory.getId()).isGreaterThan(0L);
@@ -64,11 +64,11 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName(value = "Delete a category (id) unit test")
     public void deleteCategoryTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = this.categoryRepository.save(this.category01);
 
-        categoryRepository.deleteById(savedCategory.getId());
+        this.categoryRepository.deleteById(savedCategory.getId());
 
-        Optional<Category> category = categoryRepository.findById(savedCategory.getId());
+        Optional<Category> category = this.categoryRepository.findById(savedCategory.getId());
 
         assertThat(category).isEmpty();
     }
@@ -76,12 +76,12 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName(value = "Update a category (id) unit test")
     public void updateCategoryTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = this.categoryRepository.save(this.category01);
 
         savedCategory.setName("Category01Updated");
-        Category updatedCategory = categoryRepository.save(savedCategory);
+        Category updatedCategory = this.categoryRepository.save(savedCategory);
 
-        Optional<Category> category = categoryRepository.findById(updatedCategory.getId());
+        Optional<Category> category = this.categoryRepository.findById(updatedCategory.getId());
 
         assertThat(category).isNotEmpty();
         assertThat(category.get().getId()).isEqualTo(savedCategory.getId());

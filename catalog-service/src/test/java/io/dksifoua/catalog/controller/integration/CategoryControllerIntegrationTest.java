@@ -3,7 +3,7 @@ package io.dksifoua.catalog.controller.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dksifoua.catalog.AbstractContainerBaseTest;
 import io.dksifoua.catalog.entity.Category;
-import io.dksifoua.catalog.repository.CategoryRepository;
+import io.dksifoua.catalog.repository.ICategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     private MockMvc mockMvc;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private ICategoryRepository ICategoryRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -41,7 +41,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
 
     @BeforeEach
     public void setUp() {
-        this.categoryRepository.deleteAll();
+        this.ICategoryRepository.deleteAll();
         this.category01 = Category.builder().name("Category01").description("Description01").build();
         this.category02 = Category.builder().name("Category02").description("Description02").build();
         this.categories = List.of(this.category01, category02);
@@ -71,7 +71,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Get all categories")
     public void getAllCategoriesIntegrationTest() throws Exception {
-        this.categoryRepository.saveAll(this.categories);
+        this.ICategoryRepository.saveAll(this.categories);
         this.mockMvc
                 .perform(get("/api/v1/categories"))
                 .andDo(print())
@@ -82,7 +82,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Get a category by id")
     public void getCategoryByIdIntegrationTest() throws Exception {
-        this.categoryRepository.save(this.category01);
+        this.ICategoryRepository.save(this.category01);
         this.mockMvc
                 .perform(get("/api/v1/categories/{id}", this.category01.getId()))
                 .andDo(print())
@@ -103,7 +103,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Update a category by id")
     public void updateCategoryByIdIntegrationTest() throws Exception {
-        this.categoryRepository.save(this.category01);
+        this.ICategoryRepository.save(this.category01);
         this.mockMvc
                 .perform(
                         put("/api/v1/categories/{id}", this.category01.getId())
@@ -132,7 +132,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Delete a category by id")
     public void deleteCategoryByIdIntegrationTest() throws Exception {
-        this.categoryRepository.save(this.category01);
+        this.ICategoryRepository.save(this.category01);
         this.mockMvc
                 .perform(delete("/api/v1/categories/{id}", this.category01.getId())                )
                 .andDo(print())
