@@ -2,7 +2,7 @@ package io.dksifoua.catalog.service.impl;
 
 import io.dksifoua.catalog.entity.Category;
 import io.dksifoua.catalog.exception.UniqueConstraintException;
-import io.dksifoua.catalog.repository.CategoryRepository;
+import io.dksifoua.catalog.repository.ICategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.*;
 public class CategoryServiceTest {
 
     @Mock
-    private CategoryRepository categoryRepository;
+    private ICategoryRepository categoryRepository;
 
     @InjectMocks
     private CategoryService categoryService;

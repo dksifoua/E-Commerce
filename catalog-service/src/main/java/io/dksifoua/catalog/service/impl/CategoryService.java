@@ -2,7 +2,7 @@ package io.dksifoua.catalog.service.impl;
 
 import io.dksifoua.catalog.entity.Category;
 import io.dksifoua.catalog.exception.UniqueConstraintException;
-import io.dksifoua.catalog.repository.CategoryRepository;
+import io.dksifoua.catalog.repository.ICategoryRepository;
 import io.dksifoua.catalog.service.ICategoryService;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,10 @@ import java.util.Optional;
 @Service
 public class CategoryService implements ICategoryService {
 
-    private final CategoryRepository categoryRepository;
+    private final ICategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryService(ICategoryRepository ICategoryRepository) {
+        this.categoryRepository = ICategoryRepository;
     }
 
     @Override

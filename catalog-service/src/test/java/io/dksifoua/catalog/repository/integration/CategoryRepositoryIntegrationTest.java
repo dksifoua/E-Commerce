@@ -2,7 +2,7 @@ package io.dksifoua.catalog.repository.integration;
 
 import io.dksifoua.catalog.AbstractContainerBaseTest;
 import io.dksifoua.catalog.entity.Category;
-import io.dksifoua.catalog.repository.CategoryRepository;
+import io.dksifoua.catalog.repository.ICategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CategoryRepositoryIntegrationTest extends AbstractContainerBaseTest {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private ICategoryRepository ICategoryRepository;
 
     private Category category01;
     private Category category02;
@@ -40,10 +40,10 @@ public class CategoryRepositoryIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Get all categories unit test")
     public  void getAllCategoryTest() {
-        categoryRepository.save(this.category01);
-        categoryRepository.save(this.category02);
+        ICategoryRepository.save(this.category01);
+        ICategoryRepository.save(this.category02);
 
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = ICategoryRepository.findAll();
 
         assertThat(categories).isNotNull();
         assertThat(categories).isNotEmpty();
@@ -53,9 +53,9 @@ public class CategoryRepositoryIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Get a category (name) unit test")
     public void getCategoryByNameTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = ICategoryRepository.save(this.category01);
 
-        Optional<Category> category = categoryRepository.findByName(savedCategory.getName());
+        Optional<Category> category = ICategoryRepository.findByName(savedCategory.getName());
 
         assertThat(category).isNotEmpty();
         assertThat(category.get().getName()).isEqualTo(this.category01.getName());
@@ -65,7 +65,7 @@ public class CategoryRepositoryIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Save a category unit test")
     public void saveCategoryTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = ICategoryRepository.save(this.category01);
 
         assertThat(savedCategory).isNotNull();
         assertThat(savedCategory.getId()).isGreaterThan(0L);
@@ -74,11 +74,11 @@ public class CategoryRepositoryIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Delete a category (id) unit test")
     public void deleteCategoryTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = ICategoryRepository.save(this.category01);
 
-        categoryRepository.deleteById(savedCategory.getId());
+        ICategoryRepository.deleteById(savedCategory.getId());
 
-        Optional<Category> category = categoryRepository.findById(savedCategory.getId());
+        Optional<Category> category = ICategoryRepository.findById(savedCategory.getId());
 
         assertThat(category).isEmpty();
     }
@@ -86,12 +86,12 @@ public class CategoryRepositoryIntegrationTest extends AbstractContainerBaseTest
     @Test
     @DisplayName(value = "Update a category (id) unit test")
     public void updateCategoryTest() {
-        Category savedCategory = categoryRepository.save(this.category01);
+        Category savedCategory = ICategoryRepository.save(this.category01);
 
         savedCategory.setName("Category01Updated");
-        Category updatedCategory = categoryRepository.save(savedCategory);
+        Category updatedCategory = ICategoryRepository.save(savedCategory);
 
-        Optional<Category> category = categoryRepository.findById(updatedCategory.getId());
+        Optional<Category> category = ICategoryRepository.findById(updatedCategory.getId());
 
         assertThat(category).isNotEmpty();
         assertThat(category.get().getId()).isEqualTo(savedCategory.getId());
