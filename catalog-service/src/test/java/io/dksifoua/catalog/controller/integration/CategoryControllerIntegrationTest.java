@@ -58,7 +58,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     public void createdCategoryIntegrationTest() throws Exception {
         this.mockMvc
                 .perform(
-                        post("/api/v1/categories")
+                        post("/api/v1/catalog/categories")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(this.category01))
                 )
@@ -73,7 +73,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     public void getAllCategoriesIntegrationTest() throws Exception {
         this.ICategoryRepository.saveAll(this.categories);
         this.mockMvc
-                .perform(get("/api/v1/categories"))
+                .perform(get("/api/v1/catalog/categories"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(this.categories.size())));
@@ -84,7 +84,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     public void getCategoryByIdIntegrationTest() throws Exception {
         this.ICategoryRepository.save(this.category01);
         this.mockMvc
-                .perform(get("/api/v1/categories/{id}", this.category01.getId()))
+                .perform(get("/api/v1/catalog/categories/{id}", this.category01.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(this.category01.getName())))
@@ -95,7 +95,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     @DisplayName(value = "Get a category by id that doesn't exist")
     public void getCategoryByIdWithResourceNotFoundExceptionIntegrationTest() throws Exception {
         this.mockMvc
-                .perform(get("/api/v1/categories/{id}", this.categories.size() + 1))
+                .perform(get("/api/v1/catalog/categories/{id}", this.categories.size() + 1))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -106,7 +106,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
         this.ICategoryRepository.save(this.category01);
         this.mockMvc
                 .perform(
-                        put("/api/v1/categories/{id}", this.category01.getId())
+                        put("/api/v1/catalog/categories/{id}", this.category01.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(this.category02))
                 )
@@ -121,7 +121,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     public void updateCategoryByIdWithResourceNotFoundExceptionIntegrationTest() throws Exception {
         this.mockMvc
                 .perform(
-                        put("/api/v1/categories/{id}", this.category01.getId())
+                        put("/api/v1/catalog/categories/{id}", this.category01.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(this.objectMapper.writeValueAsString(this.category02))
                 )
@@ -134,7 +134,7 @@ public class CategoryControllerIntegrationTest extends AbstractContainerBaseTest
     public void deleteCategoryByIdIntegrationTest() throws Exception {
         this.ICategoryRepository.save(this.category01);
         this.mockMvc
-                .perform(delete("/api/v1/categories/{id}", this.category01.getId())                )
+                .perform(delete("/api/v1/catalog/categories/{id}", this.category01.getId())                )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
